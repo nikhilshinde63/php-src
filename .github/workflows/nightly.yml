@@ -23,7 +23,7 @@ on:
       run_linux_ppc64:
         required: true
         type: boolean
-      run_linux_s390:
+      run_linux_s390x:
         required: true
         type: boolean
       run_macos_arm64:
