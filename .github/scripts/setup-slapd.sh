@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+# TESTING 1 2 3
 
 # Create TLS certificate
 sudo mkdir -p /etc/ldap/ssl
