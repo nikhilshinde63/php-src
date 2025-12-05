@@ -1,0 +1,27 @@
+name: Test self-hosted runner
+
+on:
+  push:
+    branches:
+      - test-runner
+  workflow_dispatch:
+
+jobs:
+  check-self-hosted:
+    # Use the runner label(s) for your self-hosted runner.
+    # Make sure the runner has the label "php-runner" (and 'self-hosted' is usually present).
+    runs-on: [self-hosted, php-runner]
+
+    steps:
+      - name: Show runner info
+        run: |
+          echo "RUNNER_NAME=$RUNNER_NAME"
+          echo "RUNNER_LABELS=$RUNNER_LABELS"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run a simple command
+        run: |
+          echo "Running on self-hosted runner"
+          uname -a || echo "uname not available"
