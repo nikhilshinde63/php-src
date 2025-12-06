@@ -101,7 +101,7 @@ jobs:
     name: LINUX_S390X_ASAN_UBSAN_DEBUG_ZTS
     # s390x self-hosted build (modeled on the existing PPC64 job)
     # Adjust runs-on labels to match your runner labels exactly.
-    runs-on: [self-hosted, gentoo, s390x]
+    runs-on: [self-hosted, php-runner, S390X]
     steps:
       - name: git checkout
         uses: actions/checkout@v5
