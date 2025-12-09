@@ -119,8 +119,8 @@ jobs:
         uses: ./.github/actions/configure-s390x
         with:
           configurationParameters: >-
-            CFLAGS="-fsanitize=undefined,address -fno-sanitize=function -DZEND_TRACK_ARENA_ALLOC"
-            LDFLAGS="-fsanitize=undefined,address -fno-sanitize=function"
+            CFLAGS="-fsanitize=undefined,address -DZEND_TRACK_ARENA_ALLOC"
+            LDFLAGS="-fsanitize=undefined,address"
             CC=gcc-10
             CXX=g++-10
             --enable-debug
