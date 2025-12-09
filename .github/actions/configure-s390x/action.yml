@@ -1,68 +1,38 @@
-name: "Configure (s390x / Ubuntu)"
-description: "Install common build deps (apt) and run ./buildconf + ./configure for s390x Ubuntu runners."
+name: ./configure (s390x)
 inputs:
   configurationParameters:
-    description: "Arguments passed to ./configure"
+    default: ''
     required: false
-    default: ""
   skipSlow:
-    description: "Keep the same flag as other configure actions (not used here, provided for API compatibility)."
+    default: false
     required: false
-    default: "false"
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Show OS / runner info
-      shell: bash
+    - shell: bash
       run: |
-        set -eux
-        uname -a || true
-        lsb_release -a || true
-        dpkg --print-architecture || true
-
-    - name: Install apt packages (common build deps)
-      shell: bash
-      run: |
-        set -eux
-        sudo apt-get update -y
-        # Install the packages you listed (may adjust per-host availability)
-        sudo apt-get install -y locales language-pack-de autoconf build-essential curl \
-          libtool libssl-dev libcurl4-openssl-dev libxml2-dev libreadline8 libreadline-dev \
-          libzip-dev nginx openssl pkg-config zlib1g-dev libsqlite3-dev libonig-dev \
-          libpq-dev gcc-10 g++-10 git curl tar make bzip2 wget || true
-        # Note: on some Ubuntu images gcc-10 / g++-10 packages may require apt-transport or toolchain PPA
-        # If those packages are not available, install default gcc/g++ instead:
-        if ! command -v gcc-10 >/dev/null 2>&1; then
-          echo "gcc-10 not available; ensuring gcc exists"
-          sudo apt-get install -y gcc g++ || true
-        fi
-
-    - name: Prepare buildroot
-      shell: bash
-      run: |
-        set -eux
-        echo "Repo root: $(pwd)"
-        ls -la
-
-    - name: Run buildconf if present
-      shell: bash
-      run: |
-        set -eux
-        if [ -x ./buildconf ]; then
-          ./buildconf --force
-        else
-          echo "buildconf not found or not executable; continuing"
-        fi
-
-    - name: Run ./configure
-      shell: bash
-      run: |
-        set -eux
-        echo "Running ./configure ${{ inputs.configurationParameters }}"
-        ./configure ${{ inputs.configurationParameters }} || {
-          echo "---- configure failed: dumping first 200 lines of config.log (if present) ----"
-          [ -f config.log ] && sed -n '1,200p' config.log || true
-          echo "---- end config.log ----"
-          ls -la || true
-          exit 1
-        }
+        set -x
+        ./buildconf --force
+        ./configure \
+          --enable-option-checking=fatal \
+          --prefix=/usr \
+          --without-pcre-jit \
+          --without-pear \
+          --enable-mysqlnd \
+          --with-pdo-mysql \
+          --with-pdo-pgsql=/usr/bin/pg_config \
+          --enable-bcmath \
+          --enable-fpm \
+          --enable-mbstring \
+          --enable-phpdbg \
+          --enable-shmop \
+          --enable-sockets \
+          --enable-sysvmsg \
+          --enable-sysvsem \
+          --enable-sysvshm \
+          --with-zlib \
+          --with-curl \
+          --with-openssl \
+          --enable-pcntl \
+          --with-readline \
+          ${{ inputs.configurationParameters }} || cat config.log
