@@ -129,7 +129,7 @@ jobs:
       - name: make
         run: make -j$(/usr/bin/nproc) >/dev/null
       - name: Tests
-        uses: ./.github/actions/test-gentoo
+        uses: ./.github/actions/configure-s390x
         with:
           runTestsParameters: >-
             --asan -x
