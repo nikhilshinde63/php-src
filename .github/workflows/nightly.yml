@@ -121,8 +121,8 @@ jobs:
           configurationParameters: >-
             CFLAGS="-fsanitize=undefined,address -DZEND_TRACK_ARENA_ALLOC"
             LDFLAGS="-fsanitize=undefined,address"
-            CC=gcc-10
-            CXX=g++-10
+            CC=clang-17
+            CXX=clang++-17
             --enable-debug
             --enable-zts
           skipSlow: false
