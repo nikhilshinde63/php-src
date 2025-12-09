@@ -116,7 +116,7 @@ jobs:
           cat /var/lib/portage/world || true
           echo "::endgroup::"
       - name: ./configure (s390x)
-        uses: ./.github/actions/configure-gentoo
+        uses: ./.github/actions/configure-s390x
         with:
           configurationParameters: >-
             CFLAGS="-fsanitize=undefined,address -fno-sanitize=function -DZEND_TRACK_ARENA_ALLOC"
@@ -129,7 +129,7 @@ jobs:
       - name: make
         run: make -j$(/usr/bin/nproc) >/dev/null
       - name: Tests
-        uses: ./.github/actions/configure-s390x
+        uses: ./.github/actions/test-gentoo
         with:
           runTestsParameters: >-
             --asan -x
