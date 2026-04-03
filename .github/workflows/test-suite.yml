@@ -51,6 +51,42 @@ jobs:
             --asan -x
       - name: Extra tests
         uses: ./.github/actions/extra-tests
+  LINUX_S390X:
+    if: ${{ fromJson(inputs.branch).jobs.LINUX_S390X }}
+    name: LINUX_S390X_ASAN_UBSAN_DEBUG_ZTS
+    # s390x self-hosted build (modeled on the existing PPC64 job)
+    # Adjust runs-on labels to match your runner labels exactly.
+    runs-on: ubuntu-22.04-s390x
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ fromJson(inputs.branch).ref }}
+      - name: System info
+        run: |
+          echo "::group::Show host CPU info"
+          lscpu
+          echo "::endgroup::"
+          echo "::group::Show installed packages"
+          cat /var/lib/portage/world || true
+          echo "::endgroup::"
+      - name: ./configure (s390x)
+        uses: ./.github/actions/configure-s390x
+        with:
+          configurationParameters: >-
+            CFLAGS="-fsanitize=undefined,address -DZEND_TRACK_ARENA_ALLOC"
+            --enable-debug
+            --enable-zts
+          skipSlow: false
+      - name: make
+        run: make -j$(/usr/bin/nproc) >/dev/null
+      - name: Tests
+        uses: ./.github/actions/test-gentoo
+        with:
+          runTestsParameters: >-
+            --asan -x
+      - name: Extra tests
+        uses: ./.github/actions/extra-tests
   ALPINE:
     if: ${{ fromJson(inputs.branch).jobs.ALPINE }}
     name: ALPINE_X64_ASAN_DEBUG_ZTS
