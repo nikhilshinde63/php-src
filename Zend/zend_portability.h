@@ -106,7 +106,10 @@
 # define ZEND_ASSUME(c)
 #endif
 
-#if ZEND_DEBUG
+#ifdef HAVE_GCOV
+/* Disable assert() when compiling with gcov to avoid untested branch warning. */
+# define ZEND_ASSERT(c) ((void)sizeof(c))
+#elif ZEND_DEBUG
 # define ZEND_ASSERT(c)	assert(c)
 #else
 # define ZEND_ASSERT(c) ZEND_ASSUME(c)
@@ -133,10 +136,6 @@
 #else
 # define ZEND_FALLTHROUGH ((void)0)
 #endif
-
-/* Only use this macro if you know for sure that all of the switches values
-   are covered by its case statements */
-#define EMPTY_SWITCH_DEFAULT_CASE() default: ZEND_UNREACHABLE(); break;
 
 #if defined(__GNUC__) && __GNUC__ >= 4
 # define ZEND_IGNORE_VALUE(x) (({ __typeof__ (x) __x = (x); (void) __x; }))

@@ -1025,8 +1025,10 @@ cleanup_args:
 			if (should_throw) {
 				zend_internal_call_arginfo_violation(call->func);
 			}
-			ZEND_ASSERT(!(call->func->common.fn_flags & ZEND_ACC_HAS_RETURN_TYPE) ||
-				zend_verify_internal_return_type(call->func, fci->retval));
+			if (call->func->common.fn_flags & ZEND_ACC_HAS_RETURN_TYPE) {
+				bool result = zend_verify_internal_return_type(call->func, fci->retval);
+				ZEND_ASSERT(result);
+			}
 			ZEND_ASSERT((call->func->common.fn_flags & ZEND_ACC_RETURN_REFERENCE)
 				? Z_ISREF_P(fci->retval) : !Z_ISREF_P(fci->retval));
 		}
@@ -1206,7 +1208,7 @@ ZEND_API zend_class_entry *zend_lookup_class_ex(zend_string *name, zend_string *
 					ALLOC_HASHTABLE(CG(unlinked_uses));
 					zend_hash_init(CG(unlinked_uses), 0, NULL, NULL, 0);
 				}
-				zend_hash_index_add_empty_element(CG(unlinked_uses), (zend_long)(uintptr_t)ce);
+				zend_hash_index_add_empty_element(CG(unlinked_uses), (zend_ulong)(uintptr_t)ce);
 				return ce;
 			}
 			return NULL;
@@ -1764,7 +1766,7 @@ zend_class_entry *zend_fetch_class_with_scope(
 		case 0:
 			break;
 		/* Other fetch types are not supported by this function. */
-		EMPTY_SWITCH_DEFAULT_CASE()
+		default: ZEND_UNREACHABLE();
 	}
 
 	ce = zend_lookup_class_ex(class_name, NULL, fetch_type);

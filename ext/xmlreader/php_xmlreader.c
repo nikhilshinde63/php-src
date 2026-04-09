@@ -102,7 +102,7 @@ static int xmlreader_property_reader(xmlreader_object *obj, xmlreader_prop_handl
 		case IS_LONG:
 			ZVAL_LONG(rv, retint);
 			break;
-		EMPTY_SWITCH_DEFAULT_CASE()
+		default: ZEND_UNREACHABLE();
 	}
 
 	return SUCCESS;
@@ -755,7 +755,7 @@ PHP_METHOD(XMLReader, moveToAttributeNo)
 }
 /* }}} */
 
-/* {{{ Positions reader at attribute spcified by name and namespaceURI.
+/* {{{ Positions reader at attribute specified by name and namespaceURI.
 Returns TRUE on success and FALSE on failure */
 PHP_METHOD(XMLReader, moveToAttributeNs)
 {
