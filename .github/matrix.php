@@ -99,6 +99,9 @@ function select_jobs($repository, $trigger, $nightly, $labels, $php_version, $re
     if (version_compare($php_version, '8.4', '>=') && ($all_jobs || $test_linux_ppc64)) {
         $jobs['LINUX_PPC64'] = true;
     }
+    if (version_compare($php_version, '8.4', '>=') && ($all_jobs || $test_linux_ppc64)) {
+        $jobs['LINUX_S390X'] = true;
+    }
     if ($all_jobs || !$no_jobs || $test_linux_x64) {
         $jobs['LINUX_X64']['matrix'] = $all_variations
             ? [
