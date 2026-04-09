@@ -56,6 +56,7 @@ function select_jobs($repository, $trigger, $nightly, $labels, $php_version, $re
     $test_freebsd = in_array('CI: FreeBSD', $labels, true);
     $test_libmysqlclient = in_array('CI: libmysqlclient', $labels, true);
     $test_linux_ppc64 = in_array('CI: Linux PPC64', $labels, true);
+    $test_linux_s390x = in_array('CI: Linux PPC64', $labels, true);
     $test_linux_x32 = in_array('CI: Linux X32', $labels, true);
     $test_linux_x64 = in_array('CI: Linux X64', $labels, true);
     $test_macos = in_array('CI: macOS', $labels, true);
